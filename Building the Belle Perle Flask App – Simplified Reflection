@@ -1,0 +1,31 @@
+**Building the Belle Perle Flask App – Simplified Reflection**  
+
+**Context & Goal**  
+We set out to create a lightweight, free-hosted web app for Belle Perle—a bead-and-accessory business. The app lets customers submit their details and gives the owner a secure dashboard to view customers, log sales, and delete records.
+
+---
+
+**Key Challenges**  
+- **Brand-Aligned Design:** Translating Belle Perle’s “jewel-tone” identity into a clean, responsive layout took several rounds of tweaking CSS, fonts, and Bootstrap components.  
+- **Security & Forms:** We ran into a CSRF token issue—tokens were rendering as text instead of hidden inputs. Fixing it required embedding `<input type="hidden" name="csrf_token" …>` manually.  
+- **Route Protection:** The “Back to Dashboard” link on the public customer form risked exposing admin routes; we removed it and added server-side checks to redirect unauthenticated users.  
+- **Free Hosting Constraints:** Deploying on Render (similar to PythonAnywhere) meant learning to write a correct `requirements.txt`, add Gunicorn to dependencies, and fix “gunicorn: command not found” errors. We also had to rename the service slug (`beadcraft-site` → `belle-perle`) through Render settings.  
+- **Database Decisions:** Using SQLite saved setup time but forced us to handle cascading deletes carefully and acknowledge scaling limits.
+
+---
+
+**Trade-offs**  
+- **Speed vs. Uniqueness:** We relied on Bootstrap and Google Fonts via CDNs for fast development and zero asset hosting—but at the cost of fully custom styling.  
+- **Simplicity vs. Scalability:** SQLite and a single-file Flask app were easy to maintain, but a larger client might need PostgreSQL and a more modular codebase (blueprints, an ORM).  
+- **Cost vs. Performance:** Free hosting kept the budget at \$0, but limited memory, build times, and customization compared to paid tiers.
+
+---
+
+**Lessons Learned**  
+1. **Iterate on Design Early:** Brand colors and typography make a big difference—get client feedback on mockups before coding.  
+2. **Mind the Defaults:** Always check how Flask-WTF renders CSRF tokens and include hidden fields correctly.  
+3. **Lock Down Routes:** Never expose links to admin pages on public forms; always verify `session['authenticated']` server-side.  
+4. **Deployment Prep:** List every production dependency (e.g., Gunicorn) in `requirements.txt` and test your startup command locally before pushing.  
+5. **Balance Needs:** Small projects can thrive on simple stacks, but plan for growth—separate concerns (UI, backend, database) early to make future upgrades smoother.
+
+Overall, this project reinforced the importance of tight collaboration (including troubleshooting with ChatGPT), careful security checks, and a clear roadmap from prototype to production.
